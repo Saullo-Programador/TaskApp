@@ -1,9 +1,11 @@
 package com.example.firebaseaula.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.firebaseaula.repository.UsersRepository
+import com.example.firebaseaula.authentication.FirebaseAuthRepository
 import com.example.firebaseaula.ui.state.SignInUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,8 +13,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val repository: UsersRepository
+    private val firebaseAuthRepository: FirebaseAuthRepository
 ): ViewModel(){
+
     private val _uiState = MutableStateFlow(SignInUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -32,16 +35,23 @@ class SignInViewModel @Inject constructor(
             )
         }
     }
-    fun authenticate(){
-        with(_uiState.value){
-            _uiState.update {
-                it.copy(
-                    isAuthenticated = repository.authenticate(
-                        email,
-                        password
-                    )
+    suspend fun signIn(){
+        try {
+            firebaseAuthRepository
+                .signIn(
+                    email = _uiState.value.email,
+                    password = _uiState.value.password
                 )
+        }catch (e: Exception){
+            Log.e("SignInViewModel", "signIn: ", e)
+            _uiState.update {
+                it.copy(erro = "Erro ao fazer login")
+            }
+            delay(3000)
+            _uiState.update {
+                it.copy(erro = null)
             }
         }
+
     }
 }

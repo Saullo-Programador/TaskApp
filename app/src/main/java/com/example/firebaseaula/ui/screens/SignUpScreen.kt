@@ -1,39 +1,40 @@
 package com.example.firebaseaula.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firebaseaula.ui.components.CustomButton
 import com.example.firebaseaula.ui.components.CustomTextField
-import com.example.firebaseaula.ui.viewModel.SignUpViewModel
+import com.example.firebaseaula.ui.state.SignUpUiState
 
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = hiltViewModel(),
-    onSignUpClick: () -> Unit
+    uiState: SignUpUiState,
+    onSignUpClick: () -> Unit,
+    onSignInClick: () -> Unit
 ) {
 
-    val uiState by viewModel.uiState.collectAsState()
-
     SignUpContent(
-        user = uiState.user,
-        userOnValue = uiState.onUserChange,
         email = uiState.email,
         emailOnValue = uiState.onEmailChange,
         password = uiState.password,
@@ -41,55 +42,80 @@ fun SignUpScreen(
         confirmPassword = uiState.confirmPassword,
         confirmPasswordOnValue = uiState.onConfirmPasswordChange,
         startOnClick = onSignUpClick,
+        onSignInClick = onSignInClick,
+        uiState = uiState.error
     )
 }
 
 @Composable
 fun SignUpContent(
     modifier: Modifier = Modifier,
-    user: String,
-    userOnValue: (String) -> Unit,
     email: String,
     emailOnValue: (String) -> Unit,
     password: String,
     passwordOnValue: (String) -> Unit,
     confirmPassword: String,
     confirmPasswordOnValue: (String) -> Unit,
-    startOnClick: () -> Unit
+    startOnClick: () -> Unit,
+    onSignInClick: () -> Unit,
+    uiState: String?
 ) {
     Column(
-        modifier = modifier
+        modifier
             .fillMaxSize()
-            .padding(23.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState())
     ) {
-        SignUpForm(
-            user = user,
-            userOnValue = userOnValue,
-            email = email,
-            emailOnValue = emailOnValue,
-            password = password,
-            passwordOnValue = passwordOnValue,
-            confirmPassword = confirmPassword,
-            confirmPasswordOnValue = confirmPasswordOnValue,
-            startOnClick = startOnClick
-        )
+        AnimatedVisibility(visible = uiState !=  null) {
+            uiState?.let{
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Red)
+                ) {
+                    Text(
+                        text = it,
+                        Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(23.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SignUpForm(
+                email = email,
+                emailOnValue = emailOnValue,
+                password = password,
+                passwordOnValue = passwordOnValue,
+                confirmPassword = confirmPassword,
+                confirmPasswordOnValue = confirmPasswordOnValue,
+                startOnClick = startOnClick,
+                onSignInClick = onSignInClick
+            )
+        }
     }
 }
 
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
-    user: String,
-    userOnValue: (String) -> Unit,
     email: String,
     emailOnValue: (String) -> Unit,
     password: String,
     passwordOnValue: (String) -> Unit,
     confirmPassword: String,
     confirmPasswordOnValue: (String) -> Unit,
-    startOnClick: () -> Unit
+    startOnClick: () -> Unit,
+    onSignInClick: () -> Unit
     ){
     Column(
         modifier = modifier
@@ -97,14 +123,6 @@ fun SignUpForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ){
-        CustomTextField(
-            value = user,
-            onValueChange = userOnValue,
-            leadingIcon = Icons.Default.Person,
-            trailingIcon = Icons.Default.Clear,
-            label = "Usuário",
-            placeholder = "Digite seu Usuário"
-        )
         CustomTextField(
             value = email,
             onValueChange = emailOnValue,
@@ -135,13 +153,35 @@ fun SignUpForm(
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
         )
+        TextButton(
+            onClick = onSignInClick,
+            Modifier
+                .fillMaxWidth(0.8f)
+                .padding(8.dp)
+        ) {
+            Text(text = "Logar")
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Default")
 @Composable
 fun SignUpPreview() {
     SignUpScreen(
-        onSignUpClick = {}
+        onSignUpClick = {},
+        onSignInClick = {},
+        uiState = SignUpUiState()
+    )
+}
+
+@Preview(showBackground = true, name = "With error")
+@Composable
+fun SignUp1Preview() {
+    SignUpScreen(
+        onSignUpClick = {},
+        onSignInClick = {},
+        uiState = SignUpUiState(
+            error = "Error"
+        )
     )
 }

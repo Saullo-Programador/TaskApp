@@ -1,44 +1,46 @@
 package com.example.firebaseaula.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.firebaseaula.repository.UsersRepository
 import com.example.firebaseaula.ui.components.CustomButton
 import com.example.firebaseaula.ui.components.CustomTextField
-import com.example.firebaseaula.ui.viewModel.SignInViewModel
+import com.example.firebaseaula.ui.state.SignInUiState
 
 @Composable
 fun SignInScreen(
-    viewModel: SignInViewModel = hiltViewModel(),
+    uiState: SignInUiState,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     SignInContent(
         email = uiState.email,
         emailOnValue = uiState.onEmailChange,
         password = uiState.password,
         passwordOnValue = uiState.onPasswordChange,
         onSignInClick = onSignInClick,
-        onSignUpClick = onSignUpClick
+        onSignUpClick = onSignUpClick,
+        uiState = uiState.erro
     )
 }
 
@@ -50,24 +52,48 @@ fun SignInContent(
     password: String,
     passwordOnValue: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    uiState: String?
 ) {
     Column(
-        modifier = modifier
+        modifier
             .fillMaxSize()
-            .padding(23.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState())
     ) {
-        SignInForm(
-            email = email,
-            emailOnValue = emailOnValue,
-            password = password,
-            passwordOnValue = passwordOnValue,
-            onSignInClick = onSignInClick,
-            onSignUpClick = onSignUpClick
-        )
-
+        val isErro = uiState != null
+        AnimatedVisibility(visible = isErro) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.error)
+            ) {
+                val error = uiState ?: ""
+                Text(
+                    text = error,
+                    Modifier
+                        .padding(16.dp),
+                    color = Color.Red
+                )
+            }
+        }
+        Column(
+            modifier = modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(23.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SignInForm(
+                email = email,
+                emailOnValue = emailOnValue,
+                password = password,
+                passwordOnValue = passwordOnValue,
+                onSignInClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        }
     }
 }
 
@@ -120,13 +146,24 @@ fun SignInForm(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "default")
 @Composable
 fun SignIpPreview() {
-    val fakeViewModel = SignInViewModel(repository = UsersRepository())
     SignInScreen(
-        viewModel = fakeViewModel,
         onSignInClick = {},
-        onSignUpClick = {}
+        onSignUpClick = {},
+        uiState = SignInUiState()
+    )
+}
+
+@Preview(showBackground = true, name = "with error")
+@Composable
+fun SignIp1Preview() {
+    SignInScreen(
+        onSignInClick = {},
+        onSignUpClick = {},
+        uiState = SignInUiState(
+            erro = "Error ao fazer login"
+        )
     )
 }

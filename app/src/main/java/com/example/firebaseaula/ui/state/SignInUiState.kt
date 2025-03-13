@@ -7,4 +7,5 @@ data class SignInUiState (
     val onPasswordChange: (String) -> Unit = {},
     val isShowPassword: Boolean = false,
     val isAuthenticated: Boolean = false,
+    val erro: String? = null
 )

@@ -14,6 +14,7 @@ object HomeGraph {
 object WelcomeGraph {
     const val ROOT = "welcome_graph"
     const val INITIAL = "initial"
+    const val SPLASH = "splash"
 }
 
 object RootGraph {

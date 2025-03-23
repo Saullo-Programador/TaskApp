@@ -24,7 +24,7 @@ fun CustomButton(
     icon: ImageVector? = null,
     iconPosition: ButtonIconPosition = ButtonIconPosition.START,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
-    cornerRadius: Int = 12 // Define o RoundedCornerShape padrão
+    cornerRadius: Int = 12
 ) {
     Button(
         onClick = { if (!isLoading) onClick() },
@@ -73,14 +73,14 @@ fun CustomButtonPreview() {
             text = "Confirmar",
             onClick = { /* TODO */ },
             icon = Icons.Default.Check,
-            cornerRadius = 8 // Bordas arredondadas menores
+            cornerRadius = 8
         )
 
         CustomButton(
             text = "Carregando...",
             onClick = { /* TODO */ },
             isLoading = true,
-            cornerRadius = 20 // Bordas mais arredondadas
+            cornerRadius = 20
         )
 
         CustomButton(
@@ -89,7 +89,7 @@ fun CustomButtonPreview() {
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
             icon = Icons.Default.Delete,
             iconPosition = ButtonIconPosition.END,
-            cornerRadius = 0 // Botão totalmente retangular
+            cornerRadius = 0
         )
     }
 }

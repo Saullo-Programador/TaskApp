@@ -11,7 +11,7 @@ import com.example.firebaseaula.ui.screens.HomeScreen
 import com.example.firebaseaula.ui.viewModel.HomeViewModel
 
 fun NavGraphBuilder.homeGraph(
-
+    onNavigateToAddTask: () -> Unit = {},
 ) {
     navigation(
         route = AppGraph.home.ROOT,
@@ -22,7 +22,8 @@ fun NavGraphBuilder.homeGraph(
         ) {
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
-                onSairClick = { viewModel.signOut() }
+                onSairClick = { viewModel.signOut() },
+                onAddClick = onNavigateToAddTask,
             )
         }
     }

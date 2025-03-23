@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.firebaseaula.ui.components.CustomButton
-import com.example.firebaseaula.ui.components.CustomTextField
+import com.example.firebaseaula.ui.components.CustomTextFieldOutlined
 import com.example.firebaseaula.ui.state.SignUpUiState
 
 @Composable
@@ -123,7 +123,7 @@ fun SignUpForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ){
-        CustomTextField(
+        CustomTextFieldOutlined(
             value = email,
             onValueChange = emailOnValue,
             leadingIcon = Icons.Default.Email,
@@ -131,7 +131,7 @@ fun SignUpForm(
             label = "E-mail",
             placeholder = "Digite seu Email"
         )
-        CustomTextField(
+        CustomTextFieldOutlined(
             value = password,
             onValueChange = passwordOnValue,
             leadingIcon = Icons.Default.Lock,
@@ -139,7 +139,7 @@ fun SignUpForm(
             label = "Senha",
             placeholder = "Digite sua Senha"
         )
-        CustomTextField(
+        CustomTextFieldOutlined(
             value = confirmPassword,
             onValueChange = confirmPasswordOnValue,
             leadingIcon = Icons.Default.Lock,

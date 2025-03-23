@@ -9,6 +9,7 @@ object AuthGraph {
 object HomeGraph {
     const val ROOT = "home_graph"
     const val HOME = "home"
+    const val ADD_TASK = "add_task"
 }
 
 object WelcomeGraph {

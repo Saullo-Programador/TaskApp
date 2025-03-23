@@ -16,7 +16,7 @@ fun NavGraphBuilder.signInScreen(
 
     onNavigateToSignUp: () -> Unit
 ) {
-    composable(AppGraph.auth.SIGN_IN) { // Usando AppGraph para definir a rota corretamente
+    composable(AppGraph.auth.SIGN_IN) {
         val viewModel: SignInViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
         val scope = rememberCoroutineScope()

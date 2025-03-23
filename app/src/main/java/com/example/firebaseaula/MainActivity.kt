@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.firebaseaula.ui.navigation.AppGraph
+import com.example.firebaseaula.ui.navigation.addTaskScreen
 import com.example.firebaseaula.ui.navigation.authGraph
 import com.example.firebaseaula.ui.navigation.homeGraph
 import com.example.firebaseaula.ui.navigation.navigateToAuthGraph
@@ -34,7 +35,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             FirebaseAulaTheme {
                 Surface(
@@ -69,7 +69,18 @@ class MainActivity : ComponentActivity() {
                                 navController.navigateToSignUp()
                             }
                         )
-                        homeGraph()
+                        homeGraph(
+                            onNavigateToAddTask = {
+                                navController.navigate(AppGraph.home.ADD_TASK)
+                            }
+                        )
+                        addTaskScreen (
+                            onPopBackStack = {
+                                navController.navigate(AppGraph.home.HOME) {
+                                    popUpTo(AppGraph.home.HOME) { inclusive = true }
+                                }
+                            }
+                        )
                     }
                 }
             }

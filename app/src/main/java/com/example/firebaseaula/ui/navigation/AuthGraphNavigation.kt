@@ -41,5 +41,5 @@ fun NavHostController.navigateToAuthGraph(
         }
     }
 ) {
-    navigate(AppGraph.auth.ROOT, navOptions) // Utilizando a estrutura
+    navigate(AppGraph.auth.ROOT, navOptions)
 }

@@ -71,6 +71,7 @@ fun HomeContent(
         ) {
             HomeTopBar(onClickSignOut = onClickSignOut)
             TaskListScreen()
+            //TaskListFake()
         }
     }
 }
@@ -165,13 +166,71 @@ fun HomeTopBar(
     }
 }
 
+/*
+@Composable
+fun TaskListFake(viewModel: FakeHomeViewModel = FakeHomeViewModel()) {
+    val isLoading = false
+    val isRandomOrder by viewModel.isRandomOrder.collectAsState()
+    val tasks by viewModel.tasks.collectAsState()
+    val taskBeingEdited by viewModel.taskBeingEdited.collectAsState()
+
+    if (isLoading) {
+        LoadingScreen()
+    } else {
+        if (taskBeingEdited != null) {
+            UpdateTaskScreen(
+                onClickCancelar = { viewModel.cancelEdit() },
+                onClickSalvar = { newName ->
+                    taskBeingEdited?.let {
+                        viewModel.checkTask(it.id, false) // Simula update
+                        viewModel.cancelEdit()
+                    }
+                },
+                isLoading = false
+            )
+        } else {
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                Button(
+                    onClick = { viewModel.toggleOrder() },
+                    modifier = Modifier.padding(bottom = 5.dp)
+                ) {
+                    Text(if (isRandomOrder) "Modo Normal" else "Modo Aleatório")
+                }
+
+                if (tasks.isEmpty()) {
+                    ScreenComponents(text = "Nenhuma Task Criada")
+                } else {
+                    LazyColumn {
+                        items(tasks.size) { index ->
+                            val task = tasks[index]
+                            ItemTask(
+                                modifier = Modifier.padding(vertical = 5.dp),
+                                taskName = task.name,
+                                onDeleteTask = { viewModel.deleteTask(taskId = task.id) },
+                                onEditTask = { viewModel.editTask(task) },
+                                onCheckedChange = { isChecked ->
+                                    viewModel.checkTask(taskId = task.id, isChecked = isChecked)
+                                },
+                                isChecked = task.isChecked,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+ */
+
+
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
     FirebaseAulaTheme {
-        HomeScreen(
-            onSairClick = {},
-            onAddClick = {},
+        HomeContent(
+            onClickSignOut = {},
+            onAddClick = {}
         )
     }
 }

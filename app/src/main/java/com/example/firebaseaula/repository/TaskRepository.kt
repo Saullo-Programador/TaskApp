@@ -33,6 +33,11 @@ class TaskRepository @Inject constructor(
 
     }
 
+    suspend fun updateTask(taskId: String, newName: String) {
+        val taskRef = firestore.collection("tasks").document(taskId)
+        taskRef.update("name", newName).await()
+    }
+
     suspend fun deleteTask(taskId: String) {
         firestore.collection("tasks").document(taskId).delete().await()
     }

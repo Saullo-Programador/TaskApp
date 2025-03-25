@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseaula.authentication.FirebaseAuthRepository
-import com.example.firebaseaula.domain.usecase.TaskUseCase
-import com.example.firebaseaula.models.Task
+import com.example.firebaseaula.domain.usecase.AddTaskUseCase
+import com.example.firebaseaula.domain.usecase.GetTasksUseCase import com.example.firebaseaula.models.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTaskViewModel @Inject constructor(
-    private val taskUseCase: TaskUseCase,
+    private val addTaskUseCase: AddTaskUseCase,
+    private val getTasksUseCase: GetTasksUseCase,
     private val fireAuth: FirebaseAuthRepository
 ) : ViewModel() {
 
@@ -33,7 +34,7 @@ class AddTaskViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     _isLoading.value = true
-                    taskUseCase.addTask(task)
+                    addTaskUseCase(task)
                     loadUserTasks()
                     onSuccess()
                     loadUserTasks()
@@ -50,7 +51,7 @@ class AddTaskViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     _isLoading.value = true
-                    _tasks.value = taskUseCase.getTasks(userId)
+                    _tasks.value = getTasksUseCase(userId)
                     _isLoading.value = false
                 } catch (e: Exception) {
                     Log.e("AddTaskViewModel", "Erro ao carregar tarefas do usuário", e)

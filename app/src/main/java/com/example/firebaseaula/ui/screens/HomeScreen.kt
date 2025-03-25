@@ -82,6 +82,7 @@ fun TaskListScreen(viewModel: HomeViewModel = hiltViewModel()) {
     var isLoading by remember { mutableStateOf(true) }
     val isRandomOrder by viewModel.isRandomOrder.collectAsState()
     val tasks by viewModel.tasks.collectAsState(initial = emptyList())
+    val taskBeingEdited by viewModel.taskBeingEdited.collectAsState()
 
     if (tasks.isEmpty()) {
         isLoading = false
@@ -90,22 +91,44 @@ fun TaskListScreen(viewModel: HomeViewModel = hiltViewModel()) {
     if (isLoading) {
         LoadingScreen()
     } else {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            Button(onClick = { viewModel.toggleOrder() }, modifier = Modifier.padding(bottom = 5.dp)) {
-                Text(if (isRandomOrder) "Modo Normal" else "Modo Aleatório")
-            }
+        if (taskBeingEdited != null) {
+            UpdateTaskScreen(
+                onClickCancelar = {viewModel.cancelEdit()},
+                onClickSalvar = {newName ->
+                    taskBeingEdited?.let{
+                        viewModel.updateTask(it.id, newName){
+                            viewModel.cancelEdit()
+                        }
+                    }
+                },
+                isLoading = false
+            )
+        }else{
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                Button(
+                    onClick = { viewModel.toggleOrder() },
+                    modifier = Modifier.padding(bottom = 5.dp)
+                ) {
+                    Text(if (isRandomOrder) "Modo Normal" else "Modo Aleatório")
+                }
 
-            if (tasks.isEmpty()) {
-                ScreenComponents(text = "Nenhum Task Criada")
-            }else{
-                LazyColumn {
-                    items(tasks.size) { task ->
-                        val task = tasks[task]
-                        ItemTask(
-                            modifier = Modifier.padding( vertical = 5.dp ),
-                            taskName = task.name,
-                            onDeleteTask = { viewModel.deleteTask(taskId = task.id) }
-                        )
+                if (tasks.isEmpty()) {
+                    ScreenComponents(text = "Nenhum Task Criada")
+                } else {
+                    LazyColumn {
+                        items(tasks.size) { index ->
+                            val task = tasks[index]
+                            ItemTask(
+                                modifier = Modifier.padding(vertical = 5.dp),
+                                taskName = task.name,
+                                onDeleteTask = { viewModel.deleteTask(taskId = task.id) },
+                                onEditTask = { viewModel.editTask(task) },
+                                onCheckedChange = { isChecked ->
+                                    viewModel.checkTask(taskId = task.id, isChecked = isChecked )
+                                },
+                                isChecked = task.isChecked,
+                            )
+                        }
                     }
                 }
             }

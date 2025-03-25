@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.firebaseaula.ui.components.CustomButton
 import com.example.firebaseaula.ui.components.CustomTextField
 import com.example.firebaseaula.ui.components.LoadingScreen
+import com.example.firebaseaula.ui.components.TopBarComponents
 
 @Composable
 fun AddTaskScreen(
@@ -34,39 +35,46 @@ fun AddTaskScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize(),
     ) {
+        TopBarComponents(title = "Add Task")
         if (isLoading) {
             LoadingScreen()
         } else {
-            Row (
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                CustomTextField(
-                    value = taskName,
-                    onValueChange = {taskName = it},
-                    label = "Task Name",
-                    placeholder = "Digite aqui...",
-                    trailingIcon = Icons.Default.Clear,
-                    onTrailingIconClick = { taskName = "" },
-                    modifier = Modifier.weight(2f)
-                )
-                CustomButton(
-                    text = "Add",
-                    onClick = {onClick(taskName)},
-                    icon = Icons.Default.Add,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(55.dp)
-                )
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    CustomTextField(
+                        value = taskName,
+                        onValueChange = { taskName = it },
+                        label = "Task Name",
+                        placeholder = "Digite aqui...",
+                        trailingIcon = Icons.Default.Clear,
+                        onTrailingIconClick = { taskName = "" },
+                        modifier = Modifier.weight(2f)
+                    )
+                    CustomButton(
+                        text = "Add",
+                        onClick = { onClick(taskName) },
+                        icon = Icons.Default.Add,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(55.dp)
+                    )
+                }
             }
         }
     }

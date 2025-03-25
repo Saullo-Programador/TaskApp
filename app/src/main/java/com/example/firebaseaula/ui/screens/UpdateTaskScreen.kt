@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.firebaseaula.ui.components.CustomButton
 import com.example.firebaseaula.ui.components.CustomTextField
 import com.example.firebaseaula.ui.components.LoadingScreen
+import com.example.firebaseaula.ui.components.TopBarComponents
 
 @Composable
 fun UpdateTaskScreen(
@@ -35,15 +36,17 @@ fun UpdateTaskScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
+            .fillMaxSize(),
     ) {
+        TopBarComponents(title = "Update Task")
+
         if (isLoading) {
             LoadingScreen()
         } else {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ){
                 CustomTextField(

@@ -1,10 +1,6 @@
 package com.example.firebaseaula.ui.viewModel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseaula.authentication.FirebaseAuthRepository
@@ -15,6 +11,7 @@ import com.example.firebaseaula.models.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,10 +32,18 @@ class HomeViewModel @Inject constructor(
     private val _isRandomOrder = MutableStateFlow(false) // Estado do modo aleatório
     val isRandomOrder: StateFlow<Boolean> = _isRandomOrder
 
+    private val _userName = MutableStateFlow<String?>(null)
+    val userName = _userName.asStateFlow()
+
+
     private val _isChecked = MutableStateFlow(false)
     val isChecked: StateFlow<Boolean> = _isChecked
 
     init {
+        viewModelScope.launch {
+            val name = firebaseAuthRepository.getUserName()
+            _userName.value = name
+        }
         loadTasks()
     }
 
@@ -62,6 +67,7 @@ class HomeViewModel @Inject constructor(
         _isRandomOrder.value = !_isRandomOrder.value
         loadTasks()
     }
+
     fun editTask(task: Task) {
         _taskBeingEdited.value = task
     }

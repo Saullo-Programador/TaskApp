@@ -17,17 +17,16 @@ fun NavGraphBuilder.authGraph(
     ) {
         signInScreen(
             onNavigateToSignUp = onNavigateToSignUp,
-
         )
         signUpScreen(
             onNavigationToSignIn = {
                 onNavigateToSignIn(navOptions {
-                    popUpTo(AppGraph.auth.ROOT)
+                    popUpTo(AppGraph.auth.ROOT){inclusive = true}
                 })
             },
             onNavigateToSignIn ={
                 onNavigateToSignIn(navOptions {
-                    popUpTo(AppGraph.auth.ROOT)
+                    popUpTo(AppGraph.auth.ROOT){inclusive = true}
                 })
             }
         )

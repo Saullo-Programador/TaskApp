@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -35,6 +36,8 @@ fun SignUpScreen(
 ) {
 
     SignUpContent(
+        user = uiState.user,
+        userOnValue = uiState.onUserChange,
         email = uiState.email,
         emailOnValue = uiState.onEmailChange,
         password = uiState.password,
@@ -50,6 +53,8 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     modifier: Modifier = Modifier,
+    user: String,
+    userOnValue: (String) -> Unit,
     email: String,
     emailOnValue: (String) -> Unit,
     password: String,
@@ -92,6 +97,8 @@ fun SignUpContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SignUpForm(
+                user = user,
+                userOnValue = userOnValue,
                 email = email,
                 emailOnValue = emailOnValue,
                 password = password,
@@ -108,6 +115,8 @@ fun SignUpContent(
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
+    user: String,
+    userOnValue: (String) -> Unit,
     email: String,
     emailOnValue: (String) -> Unit,
     password: String,
@@ -123,6 +132,14 @@ fun SignUpForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ){
+        CustomTextFieldOutlined(
+            value = user,
+            onValueChange = userOnValue,
+            leadingIcon = Icons.Default.AccountCircle,
+            trailingIcon = Icons.Default.Clear,
+            label = "Usuario",
+            placeholder = "Digite seu Nome"
+        )
         CustomTextFieldOutlined(
             value = email,
             onValueChange = emailOnValue,

@@ -29,8 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.firebaseaula.ui.components.FloatingButton
 import com.example.firebaseaula.ui.components.ItemTask
@@ -43,10 +45,13 @@ import com.example.firebaseaula.ui.viewModel.HomeViewModel
 fun HomeScreen(
     onSairClick: () -> Unit,
     onAddClick: () -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val userName by homeViewModel.userName.collectAsState()
     HomeContent(
         onClickSignOut = onSairClick,
         onAddClick = onAddClick,
+        userName = userName
     )
 }
 
@@ -54,6 +59,7 @@ fun HomeScreen(
 fun HomeContent(
     onClickSignOut: () -> Unit,
     onAddClick: () -> Unit,
+    userName: String?,
 ) {
 
     Scaffold(
@@ -70,6 +76,11 @@ fun HomeContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HomeTopBar(onClickSignOut = onClickSignOut)
+            Text(
+                text = userName ?: "Carregando...",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
             TaskListScreen()
             //TaskListFake()
         }
@@ -230,7 +241,8 @@ fun HomePreview() {
     FirebaseAulaTheme {
         HomeContent(
             onClickSignOut = {},
-            onAddClick = {}
+            onAddClick = {},
+            userName = ""
         )
     }
 }

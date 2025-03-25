@@ -25,6 +25,11 @@ class SignUpViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
+                onUserChange = {user ->
+                    _uiState.update {
+                        it.copy ( user = user )
+                    }
+                },
                 onEmailChange = {email ->
                     _uiState.update {
                         it.copy ( email = email )
@@ -49,7 +54,8 @@ class SignUpViewModel @Inject constructor(
             firebaseAuthRepository
                 .signUp(
                     email = _uiState.value.email,
-                    password = _uiState.value.password
+                    password = _uiState.value.password,
+                    userName = _uiState.value.user
                 )
             _signUpIsSuccessful.emit(true)
         }catch (e:Exception){
